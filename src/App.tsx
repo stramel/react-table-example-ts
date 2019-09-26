@@ -53,7 +53,7 @@ function App() {
   // When our cell renderer calls updateMyData, we'll use
   // the rowIndex, columnID and new value to update the
   // original data
-  const updateMyData = (rowIndex, columnID, value) => {
+  const updateMyData = (rowIndex: number, columnID: string, value: unknown) => {
     // We also turn on the flag to not reset the page
     skipPageResetRef.current = true
     setData(old =>

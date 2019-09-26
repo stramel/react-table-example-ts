@@ -45,7 +45,7 @@ declare module 'react-table' {
 
   export type HeaderGroup<D extends object = {}> = UseTableHeaderGroupProps<D>
 
-  export type Row<D extends object = {}> = UseTableRowProps<D>
+  export type Row<D extends object = {}> = UseTableRowProps<D> & UseRowSelectRowProps<D>
 
   /* #region useTable */
   export function useTable<D extends object = {}>(
@@ -333,7 +333,7 @@ declare module 'react-table' {
   }
 
   export type DefaultAggregators = 'sum' | 'average' | 'median' | 'uniqueCount' | 'count'
-  export type Aggregator<D extends object> = (columnValues: unknown[], rows: Row<D>[]) => unknown
+  export type Aggregator<D extends object> = (columnValues: any[], rows: Row<D>[]) => any
   /* #endregion */
 
   /* #region usePagination */
@@ -396,6 +396,7 @@ declare module 'react-table' {
   export interface UseRowSelectRowProps<D extends object> {
     isSelected: boolean
     toggleRowSelected: (set?: boolean) => void
+    getToggleRowSelectedProps: (props?: object) => object
   }
   /* #endregion */
 

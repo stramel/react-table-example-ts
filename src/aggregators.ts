@@ -1,9 +1,9 @@
 // This is a custom aggregator that
 // takes in an array of values and
 // returns the rounded median
-export function roundedMedian(values) {
-  let min = values[0] || ''
-  let max = values[0] || ''
+export function roundedMedian(values: number[]) {
+  let min = values[0] || 0
+  let max = values[0] || 0
 
   values.forEach(value => {
     min = Math.min(min, value)

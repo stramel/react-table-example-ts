@@ -12,6 +12,7 @@ import {
   CellProps,
   HeaderProps,
 } from 'react-table'
+import { fuzzyTextFilterFn, DefaultColumnFilter } from './Filters'
 
 // Create an editable cell renderer
 function EditableCell<D extends object>({
