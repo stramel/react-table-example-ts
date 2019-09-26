@@ -44,6 +44,45 @@ const Styles = styled.div`
 
 function App() {
   const [data, setData] = React.useState(() => makeData(10000))
+  const [originalData] = React.useState(data)
+
+  // We need to keep the table from resetting the pageIndex when we
+  // Update data. So we can keep track of that flag with a ref.
+  const skipPageResetRef = React.useRef(false)
+
+  // When our cell renderer calls updateMyData, we'll use
+  // the rowIndex, columnID and new value to update the
+  // original data
+  const updateMyData = (rowIndex, columnID, value) => {
+    // We also turn on the flag to not reset the page
+    skipPageResetRef.current = true
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...row,
+            [columnID]: value,
+          }
+        }
+        return row
+      })
+    )
+  }
+
+  // After data chagnes, we turn the flag back off
+  // so that if data actually changes when we're not
+  // editing it, the page is reset
+  React.useEffect(() => {
+    skipPageResetRef.current = false
+  }, [data])
+
+  // Let's add a data resetter/randomizer to help
+  // illustrate that flow...
+  const resetData = () => {
+    // Don't reset the page when we do this
+    skipPageResetRef.current = true
+    setData(originalData)
+  }
 
   const columns = React.useMemo<Column<Person>[]>(
     () => [
@@ -135,46 +174,6 @@ function App() {
     ],
     []
   )
-
-  const [originalData] = React.useState(data)
-
-  // We need to keep the table from resetting the pageIndex when we
-  // Update data. So we can keep track of that flag with a ref.
-  const skipPageResetRef = React.useRef(false)
-
-  // When our cell renderer calls updateMyData, we'll use
-  // the rowIndex, columnID and new value to update the
-  // original data
-  const updateMyData = (rowIndex, columnID, value) => {
-    // We also turn on the flag to not reset the page
-    skipPageResetRef.current = true
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...row,
-            [columnID]: value,
-          }
-        }
-        return row
-      })
-    )
-  }
-
-  // After data chagnes, we turn the flag back off
-  // so that if data actually changes when we're not
-  // editing it, the page is reset
-  React.useEffect(() => {
-    skipPageResetRef.current = false
-  }, [data])
-
-  // Let's add a data resetter/randomizer to help
-  // illustrate that flow...
-  const resetData = () => {
-    // Don't reset the page when we do this
-    skipPageResetRef.current = true
-    setData(originalData)
-  }
 
   return (
     <Styles>
