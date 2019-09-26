@@ -7,9 +7,13 @@
     "@types/node": "12.7.7",
     "@types/react": "16.9.3",
     "@types/react-dom": "16.9.1",
+    "match-sorter": "^4.0.1",
+    "namor": "^1.1.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.2",
+    "react-table": "^6.10.3",
+    "styled-components": "^4.4.0",
     "typescript": "3.6.3"
   },
   "scripts": {
@@ -32,5 +36,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/match-sorter": "^2.3.0",
+    "@types/styled-components": "^4.1.19"
   }
 }
