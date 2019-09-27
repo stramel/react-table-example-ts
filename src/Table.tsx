@@ -1,5 +1,4 @@
 import * as React from 'react'
-import matchSorter from 'match-sorter'
 import {
   useTable,
   usePagination,
@@ -10,7 +9,6 @@ import {
   useRowSelect,
   useTableState,
   CellProps,
-  HeaderProps,
 } from 'react-table'
 import { fuzzyTextFilterFn, DefaultColumnFilter } from './Filters'
 

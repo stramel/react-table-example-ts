@@ -1,16 +1,14 @@
 import * as React from 'react'
-import { Row, HeaderProps } from "react-table"
+import { Row, FilterProps } from "react-table"
 import matchSorter from "match-sorter"
 
 
 // Define a default UI for filtering
-// TODO: Alias HeaderProps to FilterProps for easier DX
 export function DefaultColumnFilter<D extends object>({
   column: { filterValue, preFilteredRows, setFilter },
-}: HeaderProps<D>) {
+}: FilterProps<D>) {
   const count = preFilteredRows.length
 
-  // TODO: Fix, filterValue on column shouldn't be a filter function
   return (
     <input
       value={filterValue || ''}
@@ -26,15 +24,15 @@ export function DefaultColumnFilter<D extends object>({
 // a unique option from a list
 export function SelectColumnFilter<D extends object>({
   column: { filterValue, setFilter, preFilteredRows, id },
-}: HeaderProps<D>) {
+}: FilterProps<D>) {
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {
-    const options = new Set()
+    const options = new Set<any>()
     preFilteredRows.forEach(row => {
       options.add(row.values[id])
     })
-    return [...options.values()]
+    return Array.from(options.values())
   }, [id, preFilteredRows])
 
   // Render a multi-select box
@@ -60,7 +58,7 @@ export function SelectColumnFilter<D extends object>({
 // min and max values
 export function SliderColumnFilter<D extends object>({
   column: { filterValue, setFilter, preFilteredRows, id },
-}: HeaderProps<D>) {
+}: FilterProps<D>) {
   // Calculate the min and max
   // using the preFilteredRows
 
@@ -95,7 +93,7 @@ export function SliderColumnFilter<D extends object>({
 // ones that have values between the two
 export function NumberRangeColumnFilter<D extends object>({
   column: { filterValue = [], preFilteredRows, setFilter, id },
-}: HeaderProps<D>) {
+}: FilterProps<D>) {
   const [min, max] = React.useMemo(() => {
     let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
     let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
@@ -117,7 +115,6 @@ export function NumberRangeColumnFilter<D extends object>({
         type="number"
         onChange={e => {
           const val = e.target.value
-          // TODO: Do we accept setter functions
           setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
         }}
         placeholder={`Min (${min})`}
