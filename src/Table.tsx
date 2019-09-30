@@ -9,8 +9,11 @@ import {
   useRowSelect,
   useTableState,
   CellProps,
+  FilterType,
+  Column,
 } from 'react-table'
 import { fuzzyTextFilterFn, DefaultColumnFilter } from './Filters'
+import { Person } from './utils'
 
 // Create an editable cell renderer
 function EditableCell<D extends object>({
@@ -46,15 +49,22 @@ function EditableCell<D extends object>({
 }
 
 
+type Props = {
+  columns: Column<Person>[],
+  data: Person[],
+  updateMyData: (rowIndex: number, columnID: string, value: unknown) => void
+  disablePageResetOnDataChange: boolean
+}
+
 // Be sure to pass our updateMyData and the disablePageResetOnDataChange option
-export default function Table({ columns, data, updateMyData, disablePageResetOnDataChange }) {
+export default function Table({ columns, data, updateMyData, disablePageResetOnDataChange }: Props) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
-      text: (rows, id, filterValue) => {
+      text: ((rows, id, filterValue) => {
         return rows.filter(row => {
           const rowValue = row.values[id]
           return rowValue !== undefined
@@ -63,7 +73,7 @@ export default function Table({ columns, data, updateMyData, disablePageResetOnD
                 .startsWith(String(filterValue).toLowerCase())
             : true
         })
-      },
+      }) as FilterType<Person>,
     }),
     []
   )
@@ -98,7 +108,7 @@ export default function Table({ columns, data, updateMyData, disablePageResetOnD
     previousPage,
     setPageSize,
     state: [{ pageIndex, pageSize, groupBy, expanded, filters, selectedRows }],
-  } = useTable(
+  } = useTable<Person>(
     {
       columns,
       data,
@@ -136,7 +146,7 @@ export default function Table({ columns, data, updateMyData, disablePageResetOnD
                   <div>
                     {column.canGroupBy ? (
                       // If the column can be grouped, let's add a toggle
-                      <span {...column.getGroupByToggleProps()}>
+                      <span {...headerGroup.getGroupByToggleProps()}>
                         {column.isGrouped ? '🛑 ' : '👊 '}
                       </span>
                     ) : null}
@@ -159,8 +169,9 @@ export default function Table({ columns, data, updateMyData, disablePageResetOnD
         </thead>
         <tbody>
           {page.map(
-            row =>
-              prepareRow(row) || (
+            row =>{
+              prepareRow(row)
+              return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map(cell => {
                     return (
@@ -187,7 +198,7 @@ export default function Table({ columns, data, updateMyData, disablePageResetOnD
                   })}
                 </tr>
               )
-          )}
+          })}
         </tbody>
       </table>
       {/* 
